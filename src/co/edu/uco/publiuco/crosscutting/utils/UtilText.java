@@ -13,11 +13,11 @@ public final class UtilText {
 		return INSTANCE;
 	}
 	
-	public boolean isNull(final String text) {
+	public static boolean isNull(final String text) {
 		return UtilObject.isNull(text);
 	}
 	
-	public final String getDefault(final String text, final String defaultValue) {
+	public final static String getDefault(final String text, final String defaultValue) {
 		String result = text;
 		
 		if (isNull(text)) {
@@ -27,19 +27,19 @@ public final class UtilText {
 		return result;
 	}
 	
-	public final String getDefault(final String text) {
+	public final static String getDefault(final String text) {
 		return getDefault(text, EMPTY);
 	}
 	
-	public final String getDefaultValue() {
+	public final static String getDefaultValue() {
 		return EMPTY;
 	}
 	
-	public final String applyTrim(final String text) {
+	public final static String applyTrim(final String text) {
 		return getDefault(text).trim();
 	}
 	
-	public final boolean matchPattern(final String text, final String pattern) {
+	public static final boolean matchPattern(final String text, final String pattern) {
 		return getDefault(text).matches(getDefault(pattern));
 	}
 }
