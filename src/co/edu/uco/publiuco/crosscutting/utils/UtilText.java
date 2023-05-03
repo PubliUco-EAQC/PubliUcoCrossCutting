@@ -18,20 +18,36 @@ public final class UtilText {
 	}
 	
 	public final static String getDefault(final String text, final String defaultValue) {
-		String result = text;
+		/*String result = text;
 		
 		if (isNull(text)) {
 			result = isNull(defaultValue)? EMPTY : defaultValue;
 		}
 		
-		return result;
+		return result;*/
+		
+		return isEmpty(text)? getDefault(defaultValue): text;
 	}
 	
 	public final static String getDefault(final String text) {
 		return getDefault(text, EMPTY);
 	}
 	
-	public final static String getDefaultValue() {
+	public final static boolean isEmpty(final String text) {
+		return applyTrim(text).equals(EMPTY);
+	}
+	
+	public final String getDefaultIsEmpty(final String text, final String defaultValue) {
+		String result = text;
+		
+		if(isEmpty(text)) {
+			result = getDefault(defaultValue);
+		}
+		
+		return result;
+	}
+	
+	public final String getDefaultValue() {
 		return EMPTY;
 	}
 	
