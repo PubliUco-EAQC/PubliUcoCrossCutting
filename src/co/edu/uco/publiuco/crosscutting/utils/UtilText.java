@@ -47,7 +47,7 @@ public final class UtilText {
 		return result;
 	}
 	
-	public final String getDefaultValue() {
+	public final static String getDefaultValue() {
 		return EMPTY;
 	}
 	

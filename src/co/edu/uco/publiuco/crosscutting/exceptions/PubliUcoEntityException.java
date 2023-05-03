@@ -5,7 +5,7 @@ public final class PubliUcoEntityException extends PubliUcoException{
 	private static final long serialVersionUID = 3744698902413799753L;
 	
 	protected PubliUcoEntityException(final String technicalMessage, final String userMessage, final Throwable rootCause) {
-		super(technicalMessage, userMessage, rootCause, ExceptionType.DATA);
+		super(technicalMessage, userMessage, rootCause, ExceptionType.ENTITY);
 	}
 	
 	public static PubliUcoEntityException create(String technicalMessage, String userMessage, Throwable rootCause) {
