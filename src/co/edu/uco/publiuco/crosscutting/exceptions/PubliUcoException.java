@@ -5,9 +5,6 @@ import co.edu.uco.publiuco.crosscutting.utils.UtilText;
 
 public class PubliUcoException extends RuntimeException{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5402217265552244425L;
 	private ExceptionType type;
 	private String userMessage;
@@ -19,7 +16,7 @@ public class PubliUcoException extends RuntimeException{
 	}
 	
 	public final String getTechnicalMessage() {
-		return UtilText.getUtilText().getDefaultIsEmpty(getMessage(), getUserMessage());
+		return UtilText.getUtilText().getDefault(getMessage(), getUserMessage());
 	}
 
 	public final Throwable getRootCauuse() {
@@ -40,7 +37,4 @@ public class PubliUcoException extends RuntimeException{
 	public final void setUserMessage(final String userMessage) {
 		this.userMessage = UtilText.getUtilText().getDefault(userMessage);
 	}
-	
-	
-	
 }
