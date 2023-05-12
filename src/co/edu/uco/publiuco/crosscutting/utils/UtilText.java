@@ -1,4 +1,7 @@
 package co.edu.uco.publiuco.crosscutting.utils;
+
+import java.util.List;
+
 public final class UtilText {
 
 	private static final String EMAIL_RE = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
@@ -59,4 +62,10 @@ public final class UtilText {
 	public static boolean emailIsvalid(final String emailAdress){
 		return isNull(emailAdress) ? false : getUtilText().matchPattern(emailAdress, EMAIL_RE);
 	}
+
+	public boolean isEmpty(List<String> messages) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
