@@ -30,5 +30,9 @@ public interface UtilObject {
 	static <O> boolean isDefault(final O object, final O defaultValue) {
 		return  defaultValue.equals(getDefault(object, defaultValue));
 	}
+	
+	static Object getNullValue() {
+		return null;
+	}
 
 }
