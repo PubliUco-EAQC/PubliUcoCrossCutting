@@ -10,55 +10,110 @@ import co.edu.uco.publiuco.crosscutting.exception.PubliUcoCrossCuttingException;
 import co.edu.uco.publiuco.utils.Messages.UtilSqlMessages;
 
 public final class UtilSql {
-	
+
 
 	private UtilSql() {
 		super();
 	}
 	
-	public static final void beginTransaction(Connection connection) {
-		if (connectionIsOpen(connection)) {
-			try {
-				connection.setAutoCommit(false);
-			} catch (SQLException exception) {
-				var userMessage = UtilSqlMessages.BEGIN_TRANSACTION_USER_MESSAGE;
-				var technicalMessage = UtilSqlMessages.BEGIN_TRANSACTION_TECHNICAL_MESSAGE;
+	public static final void initTransaction(Connection connection) {
+		if (!connectionIsOpen(connection)) {
+			var userMessage = UtilSqlMessages.TRANSACTION_IS_NOT_OPEN_USER_MESSAGE;
+			var technicalMessage = UtilSqlMessages.TRANSACTION_IS_NOT_OPEN_TECHNICAL_MESSAGE;
+			
+			throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage);
+		}
+		
+		try {
+			if (!connection.getAutoCommit()) {
+				var userMessage = UtilSqlMessages.TRANSACTION_AUTO_COMMIT_IS_TRUE_USER_MESSAGE;
+				var technicalMessage = UtilSqlMessages.TRANSACTION_AUTO_COMMIT_IS_TRUE_TECHNICAL_MESSAGE;
 				
-				throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage, exception);
+				throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage);
 			}
+		} catch (SQLException exception) {
+			var userMessage = UtilSqlMessages.SQL_EXCEPTION_USER_MESSAGE;
+			var technicalMessage = UtilSqlMessages.generateSqlExceptionTechnicalMessage;
+			
+			throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage);	
+		}
+		
+		try {
+			connection.setAutoCommit(false);
+		} catch (SQLException exception) {
+			var userMessage = UtilSqlMessages.INIT_TRANSACTION_USER_MESSAGE;
+			var technicalMessage = UtilSqlMessages.INIT_TRANSACTION_TECHNICAL_MESSAGE;
+			
+			throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage, exception);
 		}
 	}
 	
-	public static final void confirmTransaction(Connection connection) {
-		if (connectionIsOpen(connection)) {
-			try {
-				connection.commit();
-			} catch (SQLException exception) {
-				var userMessage = UtilSqlMessages.CONFIRM_TRANSACTION_USER_MESSAGE;
-				var technicalMessage = UtilSqlMessages.CONFIRM_TRANSACTION_TECHNICAL_MESSAGE;
+	public static final void commitTransaction(Connection connection) {
+		if (!connectionIsOpen(connection)) {
+			var userMessage = UtilSqlMessages.TRANSACTION_IS_NOT_OPEN_USER_MESSAGE;
+			var technicalMessage = UtilSqlMessages.TRANSACTION_IS_NOT_OPEN_TECHNICAL_MESSAGE;
+			
+			throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage);
+		}
+		
+		try {
+			if (connection.getAutoCommit()) {
+				var userMessage = UtilSqlMessages.TRANSACTION_AUTO_COMMIT_IS_TRUE_USER_MESSAGE;
+				var technicalMessage = UtilSqlMessages.TRANSACTION_AUTO_COMMIT_IS_TRUE_TECHNICAL_MESSAGE;
 				
-				throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage, exception);
+				throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage);
 			}
+		} catch (SQLException exception) {
+			var userMessage = UtilSqlMessages.SQL_EXCEPTION_USER_MESSAGE;
+			var technicalMessage = UtilSqlMessages.generateSqlExceptionTechnicalMessage;
+			
+			throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage);	
+		}
+		
+		try {
+			connection.commit();
+		} catch (SQLException exception) {
+			var userMessage = UtilSqlMessages.COMMIT_TRANSACTION_USER_MESSAGE;
+			var technicalMessage = UtilSqlMessages.COMMIT_TRANSACTION_TECHNICAL_MESSAGE;
+			
+			throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage, exception);
 		}
 	}
 	
-	public static final void cancelTransaction(Connection connection) {
-		if (connectionIsOpen(connection)) {
-			try {
-				connection.rollback();
-			} catch (SQLException exception) {
-				var userMessage = UtilSqlMessages.CANCEL_TRANSACTION_USER_MESSAGE;
-				var technicalMessage = UtilSqlMessages.CANCEL_TRANSACTION_TECHNICAL_MESSAGE;
+	public static final void rollbackTransaction(Connection connection) {
+		if (!connectionIsOpen(connection)) {
+			var userMessage = UtilSqlMessages.TRANSACTION_IS_NOT_OPEN_USER_MESSAGE;
+			var technicalMessage = UtilSqlMessages.TRANSACTION_IS_NOT_OPEN_TECHNICAL_MESSAGE;
+			
+			throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage);
+		}
+		
+		try {
+			if (connection.getAutoCommit()) {
+				var userMessage = UtilSqlMessages.TRANSACTION_AUTO_COMMIT_IS_TRUE_USER_MESSAGE;
+				var technicalMessage = UtilSqlMessages.TRANSACTION_AUTO_COMMIT_IS_TRUE_TECHNICAL_MESSAGE;
 				
-				throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage, exception);
+				throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage);
 			}
+		} catch (SQLException exception) {
+			var userMessage = UtilSqlMessages.SQL_EXCEPTION_USER_MESSAGE;
+			var technicalMessage = UtilSqlMessages.generateSqlExceptionTechnicalMessage;
+			
+			throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage);	
+		}
+		
+		try {
+			connection.rollback();
+		} catch (SQLException exception) {
+			var userMessage = UtilSqlMessages.ROLLBACK_TRANSACTION_USER_MESSAGE;
+			var technicalMessage = UtilSqlMessages.ROLLBACK_TRANSACTION_TECHNICAL_MESSAGE;
+			
+			throw PubliUcoCrossCuttingException.create(technicalMessage, userMessage, exception);
 		}
 	}
 	
 	public static final Connection openConnection(final String url, final String username, final String password) {
 		try {
-			//Connection connection = DriverManager.getConnection(url, username, password);
-			//return connection;
 			return DriverManager.getConnection(url, username, password);
 		} catch (final SQLException exception) {
 			var userMessage = UtilSqlMessages.OPEN_CONNECTION_USER_MESSAGE;
@@ -100,23 +155,23 @@ public final class UtilSql {
 		}
 	}
 	
-	  public static void closeResultSet(ResultSet rs) {
-		    try {
-		      if (rs != null) {
-		        rs.close();
-		      }
-		    } catch (SQLException e) {
-		      // manejo de excepción
-		    }
-		  }
-		  
-		  public static void closePreparedStatement(PreparedStatement ps) {
-		    try {
-		      if (ps != null) {
-		        ps.close();
-		      }
-		    } catch (SQLException e) {
-		      // manejo de excepción
-		    }
-		  }
+//	  public static void closeResultSet(ResultSet rs) {
+//		    try {
+//		      if (rs != null) {
+//		        rs.close();
+//		      }
+//		    } catch (SQLException e) {
+//		      // manejo de excepción
+//		    }
+//		  }
+//		  
+//		  public static void closePreparedStatement(PreparedStatement ps) {
+//		    try {
+//		      if (ps != null) {
+//		        ps.close();
+//		      }
+//		    } catch (SQLException e) {
+//		      // manejo de excepción
+//		    }
+//		  }
 }
